@@ -1,12 +1,13 @@
 import { inject, injectable } from "tsyringe";
 
 import { AppError } from "../../../../shared/errors/AppError";
+import { Product } from "../../infra/typeorm/entities/Product";
 import { IProductsRepository } from "../../repositories/IProductsRepository";
 
 interface IRequest {
   description: string;
   price: number;
-  quantity: number;
+  amount: number;
 }
 
 @injectable()
@@ -16,7 +17,7 @@ class CreateProductUseCase {
     private productsRepository: IProductsRepository
   ) {}
 
-  async execute({ description, price, quantity }: IRequest) {
+  async execute({ description, price, amount }: IRequest): Promise<Product> {
     const productAlreadyExists =
       await this.productsRepository.findByDescription(description);
 
@@ -24,7 +25,13 @@ class CreateProductUseCase {
       throw new AppError("Product already exists!", 400);
     }
 
-    await this.productsRepository.create({ description, price, quantity });
+    const product = await this.productsRepository.create({
+      description,
+      price,
+      amount,
+    });
+
+    return product;
   }
 }
 

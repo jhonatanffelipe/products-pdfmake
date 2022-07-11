@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { CreateProductController } from "../../../../modules/products/useCases/createProduct/CreateSpecificationController";
-import { ListProductsController } from "../../../../modules/products/useCases/listProducts/ListProductsController";
+import { CreateProductController } from "../../../../modules/products/useCases/createProduct/CreateProductController";
+import { ListProductsController } from "../../../../modules/products/useCases/listProducts/ListProductController";
 
 const productsRoutes = Router();
 

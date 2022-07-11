@@ -8,15 +8,16 @@
   "scripts": {
     "up": "docker-compose -f docker-compose.yml up",
     "dev": "ts-node-dev --inspect --transpile-only --ignore-watch node-modules --respawn src/shared/infra/http/server.ts",
-    "migration:create": "ts-node-dev ./node_modules/typeorm/cli.js  migration:create -n ",
-    "migration:run": "ts-node-dev ./node_modules/typeorm/cli.js  migration:run",
-    "migration:revert": "ts-node-dev ./node_modules/typeorm/cli.js  migration:revert",
+    "migration:create": "ts-node-dev ./node_modules/typeorm/cli.js migration:create -n ",
+    "migration:run": "ts-node-dev ./node_modules/typeorm/cli.js migration:run",
+    "migration:revert": "ts-node-dev ./node_modules/typeorm/cli.js migration:revert",
     "seed:create": "ts-node-dev ./node_modules/typeorm/cli.js migration:create -c seed -n ",
     "seed:run": "ts-node-dev ./node_modules/typeorm/cli.js migration:run -c seed",
     "seed:revert": "ts-node-dev ./node_modules/typeorm/cli.js migration:revert -c seed",
     "test": "NODE_ENV=test jest --runInBand"
   },
   "dependencies": {
+    "@types/pdfmake": "^0.2.0",
     "bcrypt": "^5.0.1",
     "csv-parse": "^5.0.4",
     "date-fns": "^2.28.0",
@@ -26,6 +27,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.3",
     "multer": "^1.4.4",
+    "pdfmake": "^0.2.5",
     "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "supertest": "^6.2.3",
@@ -55,7 +57,7 @@
     "jest": "^28.1.1",
     "prettier": "^2.6.2",
     "ts-jest": "^28.0.5",
-    "ts-node-dev": "^1.1.8",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^4.6.4"
   }
 }

@@ -1,6 +1,6 @@
 FROM node:14.17.6
 
-WORKDIR /src/app/rentx
+WORKDIR /src/app/products-pdfmake
 
 COPY ./package*.json ./
 
@@ -9,5 +9,4 @@ RUN apt-get update && \
   yarn add typescript -g
 
 COPY . .
-
 CMD ["yarn","dev"]
