@@ -34,18 +34,24 @@ productsRoutes.get("/report", async (request: Request, response: Response) => {
   const body = [];
 
   const columnsTitle: TableCell = [
-    { text: "ID", style: "columnsTitle" },
-    { text: "Descrição", style: "columnsTitle" },
-    { text: "Preço", style: "columnsTitle" },
-    { text: "Quantidade", style: "columnsTitle" },
+    { text: "\nID", style: "columnsTitle" },
+    { text: "\nDescrição", style: "columnsTitle" },
+    { text: "\nPreço", style: "columnsTitle" },
+    { text: "\nQuantidade", style: "columnsTitle" },
   ];
 
   products.forEach((product) => {
     const rows = [];
-    rows.push(product.id);
-    rows.push(product.description);
-    rows.push(product.price);
-    rows.push(product.amount);
+    rows.push({ text: `\n${product.id}`, style: "columnsRows" });
+    rows.push({ text: `\n${product.description}`, style: "columnsRows" });
+    rows.push({
+      text: `\n${new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }).format(product.price)}`,
+      style: "columnsRows",
+    });
+    rows.push({ text: `\n${product.amount}`, style: "columnsRows" });
     body.push(rows);
   });
 
@@ -65,9 +71,9 @@ productsRoutes.get("/report", async (request: Request, response: Response) => {
       {
         table: {
           heights: () => {
-            return 30;
+            return 25;
           },
-          widths: [270, "auto", "auto", "auto"],
+          widths: [230, 90, 90, 70],
           body: [columnsTitle, ...body],
         },
       },
@@ -82,6 +88,11 @@ productsRoutes.get("/report", async (request: Request, response: Response) => {
         bold: true,
         fillColor: "#7159c1",
         color: "#fff",
+        alignment: "center",
+      },
+      columnsRows: {
+        fontSize: 10,
+        bold: true,
         alignment: "center",
       },
     },
