@@ -1,6 +1,7 @@
-import { Request, Response, response, Router } from "express";
+import { Request, Response, Router } from "express";
+import moment from "moment";
 import PdfPrinter from "pdfmake";
-import { TDocumentDefinitions } from "pdfmake/interfaces"; // eslint-disable-line import/no-unresolved
+import { TableCell, TDocumentDefinitions } from "pdfmake/interfaces"; // eslint-disable-line import/no-unresolved
 
 import { ProductsRepository } from "../../../../modules/products/infra/typeorm/repositories/ProductsRepository";
 import { CreateProductController } from "../../../../modules/products/useCases/createProduct/CreateProductController";
@@ -17,16 +18,7 @@ productsRoutes.get("/", listProductsController.handle);
 
 productsRoutes.get("/report", async (request: Request, response: Response) => {
   const productsRepository = new ProductsRepository();
-  const products = (await productsRepository.list()).map((product) => {
-    return [
-      product.id,
-      product.description,
-      product.price.toString(),
-      product.amount.toString(),
-    ];
-  });
-
-  console.log(products);
+  const products = await productsRepository.list();
 
   const fonts = {
     Helvetica: {
@@ -39,9 +31,60 @@ productsRoutes.get("/report", async (request: Request, response: Response) => {
 
   const printer = new PdfPrinter(fonts);
 
+  const body = [];
+
+  const columnsTitle: TableCell = [
+    { text: "ID", style: "columnsTitle" },
+    { text: "Descrição", style: "columnsTitle" },
+    { text: "Preço", style: "columnsTitle" },
+    { text: "Quantidade", style: "columnsTitle" },
+  ];
+
+  products.forEach((product) => {
+    const rows = [];
+    rows.push(product.id);
+    rows.push(product.description);
+    rows.push(product.price);
+    rows.push(product.amount);
+    body.push(rows);
+  });
+
   const docDefinitions: TDocumentDefinitions = {
     defaultStyle: { font: "Helvetica" },
-    content: [{ text: "Meu Primeiro Relatório." }],
+    content: [
+      {
+        columns: [
+          { text: "Relatório de produtos", style: "header" },
+          {
+            text: `${moment().format("DD/MM/YYYY HH:mm")}hs \n\n`,
+            style: "header",
+            alignment: "right",
+          },
+        ],
+      },
+      {
+        table: {
+          heights: () => {
+            return 30;
+          },
+          widths: [270, "auto", "auto", "auto"],
+          body: [columnsTitle, ...body],
+        },
+      },
+    ],
+    styles: {
+      header: {
+        fontSize: 15,
+        bold: true,
+      },
+      columnsTitle: {
+        fontSize: 10,
+        bold: true,
+        fillColor: "#7159c1",
+        color: "#fff",
+        alignment: "center",
+      },
+    },
   };
 
   const pdfDoc = printer.createPdfKitDocument(docDefinitions);
