@@ -6,7 +6,7 @@ services:
     container_name: products-pdfmake-db
     environment:
       restart: never
-      POSTGRES_PASSWORD: 123456
+      POSTGRES_PASSWORD: '123456'
       POSTGRES_DB: 'products-pdfmake'
     ports:
       - 5432:5432
